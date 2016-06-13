@@ -72,7 +72,7 @@ public final class Actions {
     @TestIndex( 2 )
     public void runConsolePandaOnepiece() throws IOException, InterruptedException {
         runConsoleProcess( "--console", //
-            "--url", "http://mangapanda.com/one_piece", //
+            "--url", "http://mangapanda.com/one-piece", //
             "--pattern", "2;62;512-514" );
     }
 
