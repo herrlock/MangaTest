@@ -5,11 +5,15 @@ import static de.herrlock.manga.TestMain.out;
 
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Iterables;
 
 public final class Actions {
     private static final Logger logger = LogManager.getLogger();
@@ -38,10 +42,10 @@ public final class Actions {
         logger.debug( "Process: {}", process );
         int exitCode = process.waitFor();
         logger.info( "Finished process." );
-        if ( exitCode > 0 ) {
-            logger.error( " Process failed with the error-code: {}", exitCode );
-        } else {
+        if ( exitCode == 0 ) {
             logger.info( "Processes succeeded" );
+        } else {
+            logger.error( "Process failed with the error-code: {}", exitCode );
         }
         return exitCode;
     }
@@ -70,13 +74,23 @@ public final class Actions {
     }
 
     @TestIndex( 2 )
+    public void runViewpage() throws IOException, InterruptedException {
+        Path justDownloadedNaruto;
+        try ( DirectoryStream<Path> dirStream = Files.newDirectoryStream( this.wd.resolve( "download" ) ) ) {
+            justDownloadedNaruto = Iterables.getFirst( dirStream, null );
+        }
+        runProcess( "--viewpage", //
+            "--folder", justDownloadedNaruto.toAbsolutePath().toString() );
+    }
+
+    @TestIndex( 3 )
     public void runConsolePandaOnepiece() throws IOException, InterruptedException {
         runConsoleProcess( "--console", //
             "--url", "http://mangapanda.com/one-piece", //
             "--pattern", "2;62;512-514" );
     }
 
-    @TestIndex( 3 )
+    @TestIndex( 4 )
     public void runConsoleFoxNaruto() throws IOException, InterruptedException {
         runConsoleProcess( "--console", //
             "--url", "http://mangafox.me/manga/naruto", //
