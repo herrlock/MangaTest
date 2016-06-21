@@ -1,13 +1,22 @@
 #!/bin/sh
 
-test__do_download=true
+test__do_download=""
 
 while [ $1 ]
 do
 	case "$1" in
-		-D) test__do_download=""
+		-D) test__do_download=true
 			;;
-		*) echo unrecognised argument: $1
+		-h|--help)
+			echo 'Usage: ./run.sh [ -h | --help ] [ -D ]'
+			echo 'Run the MangaTest-application'
+			echo 'Parameters:'
+			echo '  -h, --help Show this help and exit'
+			echo '  -D automatically download a version of the MangaDownloader with curl'
+			exit
+			;;
+		 *) echo unrecognised argument: $1
+			exit
 			;;
 	esac
 	
