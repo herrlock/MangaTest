@@ -26,7 +26,7 @@ public final class Actions {
         this.proxy = proxy == null ? null : ( proxy.startsWith( "http://" ) ? "" : "http://" ) + proxy;
     }
 
-    private int runProcess( final String... args ) throws IOException, InterruptedException {
+    private Process runProcess( final String... args ) throws IOException {
         logger.traceEntry( "Arguments: {}", Arrays.toString( args ) );
         String[] commands = new String[3 + args.length];
         System.arraycopy( basecommand, 0, commands, 0, 3 );
@@ -40,6 +40,12 @@ public final class Actions {
         logger.info( "Starting process" );
         Process process = pb.start();
         logger.debug( "Process: {}", process );
+        return process;
+    }
+
+    private int runProcessAndWait( final String... args ) throws IOException, InterruptedException {
+        logger.traceEntry( "Arguments: {}", Arrays.toString( args ) );
+        Process process = runProcess( args );
         int exitCode = process.waitFor();
         logger.info( "Finished process." );
         if ( exitCode == 0 ) {
@@ -52,18 +58,18 @@ public final class Actions {
 
     private int runConsoleProcess( final String... args ) throws IOException, InterruptedException {
         if ( this.proxy == null ) {
-            return runProcess( args );
+            return runProcessAndWait( args );
         }
         String[] newArgs = new String[args.length + 2];
         System.arraycopy( args, 0, newArgs, 0, args.length );
         newArgs[newArgs.length - 2] = "-x";
         newArgs[newArgs.length - 1] = this.proxy;
-        return runProcess( newArgs );
+        return runProcessAndWait( newArgs );
     }
 
     @TestIndex( 0 )
     public void runHelp() throws IOException, InterruptedException {
-        runProcess( "--help" );
+        runProcessAndWait( "--help" );
     }
 
     @TestIndex( 1 )
@@ -79,7 +85,7 @@ public final class Actions {
         try ( DirectoryStream<Path> dirStream = Files.newDirectoryStream( this.wd.resolve( "download" ) ) ) {
             justDownloadedNaruto = Iterables.getFirst( dirStream, null );
         }
-        runProcess( "--viewpage", //
+        runProcessAndWait( "--viewpage", //
             "--folder", justDownloadedNaruto.toAbsolutePath().toString() );
     }
 
