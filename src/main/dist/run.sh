@@ -28,7 +28,7 @@ then
 	echo downloading
 	mkdir -p temp
 	cd temp
-	curl http://herrlock.github.io/MangaDist/snapshot/Manga-1.4.0-BETA-SNAPSHOT.zip -LO#
+	curl http://herrlock.github.io/MangaDist/snapshot/Manga-1.5.0-BETA-SNAPSHOT.zip -LO#
 	cd ..
 fi
 java -jar MangaTest*.jar
