@@ -38,7 +38,7 @@ java -jar MangaTest*.jar
 
 # assert that no error was written
 test__errorsize=$(stat -c %s temp/err.txt)
-if [ $test_errorsize -gt 0 ]
+if [ $test__errorsize -gt 0 ]
 then
 	echo ERROR
 else
