@@ -23,6 +23,7 @@ do
 	shift
 done
 
+# optionally download the current version
 if [ $test__do_download ] 
 then
 	echo downloading
@@ -31,4 +32,16 @@ then
 	curl http://herrlock.github.io/MangaDist/snapshot/Manga-1.5.0-BETA-SNAPSHOT.zip -LO#
 	cd ..
 fi
+
+# execute the test
 java -jar MangaTest*.jar
+
+# assert that no error was written
+test__errorsize=$(stat -c %s temp/err.txt)
+if [ $test_errorsize -gt 0 ]
+then
+	echo ERROR
+else
+	echo SUCCESS
+fi
+
